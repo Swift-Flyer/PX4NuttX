@@ -80,7 +80,7 @@
 struct mtd_geometry_s
 {
   uint16_t blocksize;     /* Size of one read/write block */
-  uint16_t erasesize;     /* Size of one erase blocks -- must be a multiple
+  uint32_t erasesize;     /* Size of one erase blocks -- must be a multiple
                            * of blocksize. */
   size_t neraseblocks;    /* Number of erase blocks */
 };
