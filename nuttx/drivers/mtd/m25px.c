@@ -126,6 +126,9 @@
 #define M25P_M25P16_NSECTORS      32
 #define M25P_M25P16_PAGE_SHIFT    8     /* Page size 1 << 8 = 256 */
 #define M25P_M25P16_NPAGES        8192
+#define M25P_M25P16_SUBSECT_SHIFT 12   /* Sub-Sector size 1 << 12 = 4,096 */
+#define M25P_M25P16_NSUBSECTORS   512
+
 
 /*  M25P32 capacity is 4,194,304 bytes:
  *  (64 sectors) * (65,536 bytes per sector)
@@ -368,6 +371,9 @@ static inline int m25p_readid(struct m25p_dev_s *priv)
            priv->nsectors    = M25P_M25P16_NSECTORS;
            priv->pageshift   = M25P_M25P16_PAGE_SHIFT;
            priv->npages      = M25P_M25P16_NPAGES;
+#ifdef CONFIG_M25P_SUBSECTOR_ERASE
+           priv->subsectorshift = M25P_M25P16_SUBSECT_SHIFT;
+#endif
            return OK;
         }
       else if (capacity == M25P_M25P32_CAPACITY)
