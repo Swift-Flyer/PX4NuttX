@@ -1372,8 +1372,8 @@ static int smartfs_bind(FAR struct inode *blkdriver, const void *data,
   ret = smartfs_mount(fs, true);
   if (ret != 0)
     {
-      kfree(fs);
       smartfs_semgive(fs);
+      kfree(fs);
       return ret;
     }
 
