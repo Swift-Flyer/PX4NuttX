@@ -3123,6 +3123,15 @@ static inline void stm32_rxinterrupt(FAR struct stm32_usbdev_s *priv)
   /* Decode status fields */
 
   epphy  = (regval & OTGFS_GRXSTSD_EPNUM_MASK) >> OTGFS_GRXSTSD_EPNUM_SHIFT;
+  if (epphy >= STM32_NENDPOINTS) {
+      /*
+        on PH2 we are sometimes seeing a value of 8 or 12 here, with
+        STM32_NENDPOINTS at 4. We don't know why this is generated,
+        but the workaround is just to ignore it. Thanks to David
+        Sidrane for the investigation into this.
+       */
+      goto errout;
+  }
   privep = &priv->epout[epphy];
 
   /* Handle the RX event according to the packet status field */
@@ -3253,6 +3262,7 @@ static inline void stm32_rxinterrupt(FAR struct stm32_usbdev_s *priv)
 
   /* Enable the Rx Status Queue Level interrupt */
 
+errout:
   regval  = stm32_getreg(STM32_OTGFS_GINTMSK);
   regval |= OTGFS_GINT_RXFLVL;
   stm32_putreg(regval, STM32_OTGFS_GINTMSK);
